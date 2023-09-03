@@ -1,5 +1,8 @@
 package com.midas.controller;
 
+import com.midas.domain.MySQLResult;
+import com.midas.service.JsonService;
+import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,8 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class TestController {
 
+    @Resource
+    private JsonService jsonService;
+
     @GetMapping("")
-    public String home() {
-        return "Hello World!";
+    public MySQLResult home(String jsonStr) {
+        return jsonService.generateSQLByJSON(jsonStr);
     }
 }

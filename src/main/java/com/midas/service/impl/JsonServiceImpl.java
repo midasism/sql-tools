@@ -15,6 +15,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import static com.midas.constants.MySQLParameterTypeEnum.DATE;
+import static com.midas.constants.MySQLParameterTypeEnum.DATETIME;
+
 @Service
 public class JsonServiceImpl implements JsonService {
 
@@ -62,11 +65,11 @@ public class JsonServiceImpl implements JsonService {
         }
         Matcher dateMatcher = datePattern.matcher(value);
         if (dateMatcher.matches()) {
-            return MySQLParameterTypeEnum.DATE.getValue();
+            return DATE.getValue();
         }
         Matcher dateTimeMatcher = dateTimePattern.matcher(value);
         if (dateTimeMatcher.matches()) {
-            return MySQLParameterTypeEnum.DATETIME.getValue();
+            return DATETIME.getValue();
         }
         return MySQLParameterTypeEnum.VARCHAR.getValue();
     }
@@ -94,15 +97,16 @@ public class JsonServiceImpl implements JsonService {
 
         sb.append(""" 
                 ,
-                PRIMARY KEY (`name`)
+                PRIMARY KEY (`id`)
                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
                     """);
         return sb.toString();
     }
 
     private String formatFieldToTableBuildingStatement(MySQLParameter mySQLParameter) {
-        // TODO 根据字段属性生成SQL
-        // "`name` VARCHAR(64) NOT NULL"
-        return "";
+        if (DATE.getValue().equals(mySQLParameter.getType()) || DATETIME.getValue().equals(mySQLParameter.getType())) {
+            return "`%s` %s NOT NULL DEFAULT CURRENT_TIMESTAMP".formatted(mySQLParameter.getName(), mySQLParameter.getType());
+        }
+        return "`%s` %s(%d) NOT NULL".formatted(mySQLParameter.getName(), mySQLParameter.getType(), mySQLParameter.getLength());
     }
 }

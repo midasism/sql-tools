@@ -1,5 +1,6 @@
 package com.midas.domain;
 
+import com.midas.constants.MySQLParameterTypeEnum;
 import lombok.Data;
 
 /**
@@ -15,7 +16,7 @@ public class MySQLParameter {
 
     /**
      * 字段类型
-     * @see
+     * @see MySQLParameterTypeEnum
      */
     private String type;
 
@@ -24,4 +25,5 @@ public class MySQLParameter {
      */
     private Integer length;
 
+    // TODO 是否非空
 }
